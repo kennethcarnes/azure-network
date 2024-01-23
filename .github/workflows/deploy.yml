@@ -21,7 +21,6 @@ jobs:
         run: | 
           az deployment group create \
           --resource-group "${{ secrets.RESOURCE_GROUP_NAME }}" \
-          --location "${{ secrets.LOCATION }}" \
           --template-file ./bicep/main.bicep \
           # --verbose
           # --debug

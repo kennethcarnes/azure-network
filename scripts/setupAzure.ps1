@@ -26,4 +26,4 @@ Write-Host "Resource group created successfully."
 
 # Create Azure Service Principal for GitHub Actions
 Write-Host "Creating Azure Service Principal for GitHub Actions..."
-az ad sp create-for-rbac --name "github-actions-sp" --role contributor --scopes /subscriptions/$subscriptionId/resourceGroups/$resourceGroupName
+az ad sp create-for-rbac --name "github-actions-sp" --role contributor --scopes /subscriptions/$subscriptionId/resourceGroups/$resourceGroupName --json-auth
