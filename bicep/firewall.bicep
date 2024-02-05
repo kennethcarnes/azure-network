@@ -142,7 +142,8 @@ resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectio
             ]
             protocols: [
               {
-                protocolType: 'UDP'
+                protocolType: 'Udp'
+                port: 53
               }
             ]
           }
