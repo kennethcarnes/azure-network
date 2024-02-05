@@ -1,33 +1,38 @@
 param location string = 'eastus'
 param hubVnetName string = 'hubVnet'
+param hubSubnet1Prefix string = '10.0.1.0/24'
+param hubSubnet2Prefix string = '10.0.2.0/24'
 param spokeVnetDetails array = [
   {
     name: 'spokeVnet1'
     addressPrefix: '10.1.0.0/16'
-    subnetPrefix1: '10.1.1.0/24'
-    subnetPrefix2: '10.1.2.0/24'
+    subnet1Prefix: '10.1.1.0/24'
+    subnet2Prefix: '10.1.2.0/24'
   }
   {
     name: 'spokeVnet2'
     addressPrefix: '10.2.0.0/16'
-    subnetPrefix1: '10.2.1.0/24'
-    subnetPrefix2: '10.2.2.0/24'
+    subnet1Prefix: '10.2.1.0/24'
+    subnet2Prefix: '10.2.2.0/24'
   }
   {
     name: 'spokeVnet3'
     addressPrefix: '10.3.0.0/16'
-    subnetPrefix1: '10.3.1.0/24'
-    subnetPrefix2: '10.3.2.0/24'
+    subnet1Prefix: '10.3.1.0/24'
+    subnet2Prefix: '10.3.2.0/24'
   }
 ]
 
-module network './network.bicep' = {
-  name: 'networkDeployment'
+module vnets './vnets.bicep' = {
+  name: 'vnetDeployment'
   params: {
     location: location
     hubVnetName: hubVnetName
+    hubSubnet1Prefix: hubSubnet1Prefix
+    hubSubnet2Prefix: hubSubnet2Prefix
     spokeVnetDetails: spokeVnetDetails
   }
 }
 
-// Outputs can be added as needed
+// Outputs (if any)
+output hubVnetId string = vnets.outputs.hubVnetId

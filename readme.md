@@ -1,22 +1,22 @@
-# Virtual Network Peering Deployment
-
-[![Azure Deployment](https://github.com/kennethcarnes/az-700/actions/workflows/deploy.yml/badge.svg)](https://github.com/kennethcarnes/az-700/actions/workflows/deploy.yml)
-
 ## Overview
-This project automates deployment for resources using Azure Bicep and GitHub Actions.
-- Virtual Networks: Two VNets (vnet1, vnet2) with subnet and NSG configurations.
-- Virtual Machines: Two VMs in separate subnets for network testing.
-- Modularity: compute.bicep for compute resources, network.bicep for networking.
+This project automates the deployment of scalable network infrastructure using Azure Bicep and GitHub Actions, featuring a hub and spoke network topology with Azure Firewall for enhanced security.
 
 ## Structure
 
-- `.github/workflows/deploy.yml`: CI/CD workflow for deploying resources.
-- `bicep/`: Bicep templates for Azure network resources and VM configuration.
-- `scripts/`: Scripts for setting up Azure and GitHub configurations.
+- `.github/workflows/deploy.yml`: CI/CD workflow for deploying resources on Azure.
+- `bicep/`: Bicep templates for network, firewall, and routing configurations.
+- `scripts/`: Setup scripts for Azure and GitHub configurations.
+
+## Features
+
+- Hub and spoke network architecture.
+- Azure Firewall with predefined security rules.
+- Route tables for traffic management.
+- (Include Bastion host details here if applicable.)
 
 ## Setup Instructions
 
-1. Run the `scripts/setupAzure.ps1` script to set up the Azure resource group and service principal.
-2. Add the Azure Credential JSON to Github Secrets.
-3. Run the `scripts/setupGithub.ps1` script to configure other GitHub Secrets.
-4. Push changes to trigger the GitHub Actions workflow for deployment.
+1. Execute `scripts/setupAzure.ps1` to initialize Azure environment.
+2. Add Azure Credential JSON to GitHub Secrets.
+3. Run `scripts/setupGithub.ps1` to configure GitHub Secrets and environment variables.
+4. Push to main branch to trigger deployment via GitHub Actions.
