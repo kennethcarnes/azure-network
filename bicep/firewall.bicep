@@ -1,6 +1,5 @@
 param location string
 param hubVnetName string
-param workloadSubnetId string
 param firewallPrivateIp string
 
 resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2021-05-01' = {
@@ -54,7 +53,7 @@ resource azureFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' = {
   }
 }
 
-resource routeTable 'Microsoft.Network/routeTables@2020-07-01' = {
+resource routeTable 'Microsoft.Network/routeTables@2023-04-01' = {
   name: '${hubVnetName}-routeTable'
   location: location
   properties: {
@@ -68,15 +67,6 @@ resource routeTable 'Microsoft.Network/routeTables@2020-07-01' = {
         }
       }
     ]
-  }
-}
-
-resource subnetRouteTableAssociation 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: '${workloadSubnetId}/routeTable'
-  properties: {
-    routeTable: {
-      id: routeTable.id
-    }
   }
 }
 

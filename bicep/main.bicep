@@ -39,7 +39,6 @@ module firewall './firewall.bicep' = {
   params: {
     location: location
     hubVnetName: hubVnetName
-    workloadSubnetId: vnets.outputs.workloadSubnetId
     firewallPrivateIp: '10.0.1.4'
   }
   dependsOn: [
