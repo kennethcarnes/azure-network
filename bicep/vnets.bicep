@@ -29,6 +29,7 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   }
 }
 
+// Spoke Virtual Networks
 resource spokeVnets 'Microsoft.Network/virtualNetworks@2021-02-01' = [for (spokeVnetDetail, i) in spokeVnetDetails: {
   name: spokeVnetDetail.name
   location: location
