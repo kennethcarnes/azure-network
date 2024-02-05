@@ -68,3 +68,4 @@ resource vnetPeerings 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@
 
 // Outputs
 output hubVnetId string = hubVnet.id
+output workloadSubnetId string = spokeVnets[0].properties.subnets[0].id

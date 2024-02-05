@@ -34,5 +34,17 @@ module vnets './vnets.bicep' = {
   }
 }
 
-// Outputs (if any)
+module firewall './firewall.bicep' = {
+  name: 'firewallDeployment'
+  params: {
+    location: location
+    hubVnetName: hubVnetName
+    workloadSubnetId: vnets.outputs.workloadSubnetId
+    firewallPrivateIp: 'your_firewall_private_ip_here' // Replace with actual IP
+  }
+  dependsOn: [
+    vnets
+  ]
+}
+
 output hubVnetId string = vnets.outputs.hubVnetId
