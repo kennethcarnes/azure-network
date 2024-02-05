@@ -34,16 +34,19 @@ module vnets './vnets.bicep' = {
   }
 }
 
+// In main.bicep
 module firewall './firewall.bicep' = {
   name: 'firewallDeployment'
   params: {
     location: location
     hubVnetName: hubVnetName
-    firewallPrivateIp: '10.0.1.4'
+    firewallPrivateIp: '10.0.0.4'
+    // workloadSubnetId parameter removed as it's not used in the updated configuration
   }
   dependsOn: [
     vnets
   ]
 }
+
 
 output hubVnetId string = vnets.outputs.hubVnetId

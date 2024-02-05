@@ -3,6 +3,7 @@ param hubVnetName string
 param hubSubnet1Prefix string = '10.0.1.0/24'
 param hubSubnet2Prefix string = '10.0.2.0/24'
 param spokeVnetDetails array
+param AzureFirewallSubnet string = '10.0.0.0/24'
 
 // Hub Virtual Network
 resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
@@ -16,7 +17,7 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
       {
         name: 'AzureFirewallSubnet'
         properties: {
-          addressPrefix: '10.0.0.0/24'
+          addressPrefix: AzureFirewallSubnet
         }
       }
       {
