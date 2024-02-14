@@ -1,9 +1,11 @@
 param location string
 param hubVnetName string
 param firewallPrivateIp string = '10.0.0.4'
+param firewallPublicIPName string = '${hubVnetName}-fw-pip'
+param firewallMgmtPublicIPName string = '${hubVnetName}-fw-mgmt-pip'
 
 resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
-  name: '${hubVnetName}-fw-pip'
+  name: firewallPublicIPName
   location: location
   properties: {
     publicIPAllocationMethod: 'Static'
@@ -11,7 +13,7 @@ resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
 }
 
 resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
-  name: '${hubVnetName}-fw-mgmt-pip'
+  name: firewallMgmtPublicIPName
   location: location
   properties: {
     publicIPAllocationMethod: 'Static'
@@ -21,6 +23,10 @@ resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' =
 resource azureFirewall 'Microsoft.Network/azureFirewalls@2023-06-01' = {
   name: '${hubVnetName}-firewall'
   location: location
+  dependsOn: [
+    firewallPublicIP
+    firewallMgmtPublicIP
+  ]
   properties: {
     sku: {
       name: 'AZFW_VNet'
