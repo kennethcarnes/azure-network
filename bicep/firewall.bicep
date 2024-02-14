@@ -1,20 +1,24 @@
 param location string
 param hubVnetName string
 param firewallPrivateIp string = '10.0.0.4'
-param firewallPublicIPName string = '${hubVnetName}-fw-pip'
-param firewallMgmtPublicIPName string = '${hubVnetName}-fw-mgmt-pip'
 
 resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
-  name: firewallPublicIPName
+  name: '${hubVnetName}-fw-pip'
   location: location
+  sku: {
+    name: 'Standard'
+  }
   properties: {
     publicIPAllocationMethod: 'Static'
   }
 }
 
 resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
-  name: firewallMgmtPublicIPName
+  name: '${hubVnetName}-fw-mgmt-pip'
   location: location
+  sku: {
+    name: 'Standard'
+  }
   properties: {
     publicIPAllocationMethod: 'Static'
   }
@@ -23,10 +27,6 @@ resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' =
 resource azureFirewall 'Microsoft.Network/azureFirewalls@2023-06-01' = {
   name: '${hubVnetName}-firewall'
   location: location
-  dependsOn: [
-    firewallPublicIP
-    firewallMgmtPublicIP
-  ]
   properties: {
     sku: {
       name: 'AZFW_VNet'
@@ -84,7 +84,7 @@ resource firewallPolicy 'Microsoft.Network/firewallPolicies@2023-06-01' = {
   }
 }
 
-resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-02-01' = {
+resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-06-01' = {
   parent: firewallPolicy
   name: 'ApplicationRules'
   properties: {
@@ -123,7 +123,7 @@ resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleColle
   }
 }
 
-resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-02-01' = {
+resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-06-01' = {
   parent: firewallPolicy
   name: 'NetworkRules'
   properties: {
