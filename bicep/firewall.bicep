@@ -1,6 +1,6 @@
 param location string
 param hubVnetName string
-param firewallPrivateIp string
+param firewallPrivateIp string = '10.0.0.4'
 
 resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2021-05-01' = {
   name: '${hubVnetName}-fw-pip'
@@ -71,7 +71,7 @@ resource routeTable 'Microsoft.Network/routeTables@2023-04-01' = {
 }
 
 resource firewallPolicy 'Microsoft.Network/firewallPolicies@2023-06-01' = {
-  name: 'myFirewallPolicy'
+  name: '${hubVnetName}FirewallPolicy'
   location: location
   properties: {
     threatIntelMode: 'Alert'
@@ -132,19 +132,13 @@ resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectio
         rules: [
           {
             name: 'Allow-DNS'
-            ruleType: 'ApplicationRule'
+            ruleType: 'NetworkRule'
             sourceAddresses: [
               '10.0.2.0/24'
             ]
             destinationAddresses: [
               '209.244.0.3'
               '209.244.0.4'
-            ]
-            protocols: [
-              {
-                protocolType: 'Udp'
-                port: 53
-              }
             ]
           }
         ]

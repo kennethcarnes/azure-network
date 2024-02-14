@@ -1,4 +1,4 @@
-name: Azure Deployment 
+name: Azure Deployment
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Azure Login
         uses: azure/login@v1
@@ -18,9 +18,8 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy Azure Resources
-        run: | 
+        run: |
           az deployment group create \
+          --name deployment-${{ github.run_id }} \
           --resource-group "${{ secrets.RESOURCE_GROUP_NAME }}" \
-          --template-file ./bicep/main.bicep \
-          # --verbose
-          # --debug
+          --template-file ./bicep/main.bicep

@@ -5,7 +5,6 @@ param hubSubnet2Prefix string = '10.0.2.0/24'
 param spokeVnetDetails array
 param AzureFirewallSubnet string = '10.0.0.0/24'
 
-// Hub Virtual Network
 resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: hubVnetName
   location: location
@@ -32,13 +31,11 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
           addressPrefix: hubSubnet2Prefix
         }
       }
-      // ... other subnets if needed ...
     ]
   }
 }
 
-// Spoke Virtual Networks
-resource spokeVnets 'Microsoft.Network/virtualNetworks@2021-02-01' = [for (spokeVnetDetail, i) in spokeVnetDetails: {
+resource spokeVnets 'Microsoft.Network/virtualNetworks@2021-02-01' = [for spokeVnetDetail in spokeVnetDetails: {
   name: spokeVnetDetail.name
   location: location
   properties: {
@@ -62,8 +59,8 @@ resource spokeVnets 'Microsoft.Network/virtualNetworks@2021-02-01' = [for (spoke
   }
 }]
 
-resource vnetPeerings 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-02-01' = [for i in range(0, length(spokeVnetDetails)): {
-  name: '${spokeVnetDetails[i].name}/peerTo${hubVnetName}'
+resource vnetPeerings 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-02-01' = [for (spokeVnetDetail, i) in spokeVnetDetails: {
+  name: '${spokeVnetDetail.name}/peerTo${hubVnetName}'
   properties: {
     allowVirtualNetworkAccess: true
     remoteVirtualNetwork: {
@@ -75,6 +72,4 @@ resource vnetPeerings 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@
   ]
 }]
 
-// Outputs
 output hubVnetId string = hubVnet.id
-output workloadSubnetId string = spokeVnets[0].properties.subnets[0].id

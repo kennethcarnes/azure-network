@@ -4,7 +4,7 @@ This project automates the deployment of scalable network infrastructure using A
 ## Structure
 
 - `.github/workflows/deploy.yml`: CI/CD workflow for deploying resources on Azure.
-- `bicep/`: Bicep templates for network, firewall, and routing configurations.
+- `bicep/`: Bicep templates for networking resources.
 - `scripts/`: Setup scripts for Azure and GitHub configurations.
 
 ## Features
