@@ -2,7 +2,7 @@ param location string
 param hubVnetName string
 param firewallPrivateIp string = '10.0.0.4'
 
-resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2021-05-01' = {
+resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
   name: '${hubVnetName}-fw-pip'
   location: location
   properties: {
@@ -10,7 +10,7 @@ resource firewallPublicIP 'Microsoft.Network/publicIPAddresses@2021-05-01' = {
   }
 }
 
-resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2021-05-01' = {
+resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
   name: '${hubVnetName}-fw-mgmt-pip'
   location: location
   properties: {
@@ -18,13 +18,13 @@ resource firewallMgmtPublicIP 'Microsoft.Network/publicIPAddresses@2021-05-01' =
   }
 }
 
-resource azureFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' = {
+resource azureFirewall 'Microsoft.Network/azureFirewalls@2023-06-01' = {
   name: '${hubVnetName}-firewall'
   location: location
   properties: {
     sku: {
       name: 'AZFW_VNet'
-      tier: 'Basic'
+      tier: 'Standard'
     }
     ipConfigurations: [
       {
@@ -53,7 +53,7 @@ resource azureFirewall 'Microsoft.Network/azureFirewalls@2021-05-01' = {
   }
 }
 
-resource routeTable 'Microsoft.Network/routeTables@2023-04-01' = {
+resource routeTable 'Microsoft.Network/routeTables@2023-06-01' = {
   name: '${hubVnetName}-routeTable'
   location: location
   properties: {
@@ -78,7 +78,7 @@ resource firewallPolicy 'Microsoft.Network/firewallPolicies@2023-06-01' = {
   }
 }
 
-resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-06-01' = {
+resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-02-01' = {
   parent: firewallPolicy
   name: 'ApplicationRules'
   properties: {
@@ -117,7 +117,7 @@ resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleColle
   }
 }
 
-resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-06-01' = {
+resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-02-01' = {
   parent: firewallPolicy
   name: 'NetworkRules'
   properties: {
@@ -139,6 +139,13 @@ resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectio
             destinationAddresses: [
               '209.244.0.3'
               '209.244.0.4'
+            ]
+            ipProtocols: [
+              'TCP'
+              'UDP'
+            ]
+            destinationPorts: [
+              '53'
             ]
           }
         ]
