@@ -1,4 +1,5 @@
 param location string = 'eastus'
+param adminPublicKey string
 param hubVnetName string = 'hubVnet'
 param hubSubnet1Prefix string = '10.0.1.0/24'
 param hubSubnet2Prefix string = '10.0.2.0/24'
@@ -23,6 +24,8 @@ param spokeVnetDetails array = [
   }
 ]
 
+var firewallPrivateIp = '10.0.0.4'
+
 module vnets './vnets.bicep' = {
   name: 'vnetDeployment'
   params: {
@@ -39,7 +42,31 @@ module firewall './firewall.bicep' = {
   params: {
     location: location
     hubVnetName: hubVnetName
-    firewallPrivateIp: '10.0.0.4'
+    firewallPrivateIp: firewallPrivateIp
+  }
+  dependsOn: [
+    vnets
+  ]
+}
+
+module compute './compute.bicep' = {
+  name: 'computeDeployment'
+  params: {
+    location: location
+    adminUsername: 'adminUser'
+    adminPublicKey: adminPublicKey
+    spokeVnetDetails: spokeVnetDetails
+  }
+  dependsOn: [
+    vnets
+  ]
+}
+
+module management './management.bicep' = {
+  name: 'managementDeployment'
+  params: {
+    location: location
+    hubVnetName: hubVnetName
   }
   dependsOn: [
     vnets

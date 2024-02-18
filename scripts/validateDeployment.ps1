@@ -23,4 +23,12 @@ az bicep build --file ./bicep/firewall.bicep
 Write-Host "Validating firewall.bicep..."
 az bicep build --file ./bicep/vnets.bicep
 
+# Validate management.bicep
+Write-Host "Validating management.bicep..."
+az bicep build --file ./bicep/management.bicep
+
+# Validate compute.bicep
+Write-Host "Validating compute.bicep..."
+az bicep build --file ./bicep/compute.bicep
+
 Write-Host "Validation completed."

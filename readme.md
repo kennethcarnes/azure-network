@@ -18,5 +18,6 @@ This project automates the deployment of scalable network infrastructure using A
 
 1. Execute `scripts/setupAzure.ps1` to initialize Azure environment.
 2. Add Azure Credential JSON to GitHub Secrets.
-3. Run `scripts/setupGithub.ps1` to configure GitHub Secrets and environment variables.
-4. Push to main branch to trigger deployment via GitHub Actions.
+3. Generate SSH key pair for remote access to VMs.  `ssh-keygen -t rsa -b 2048` 
+4. Run `scripts/setupGithub.ps1` to configure GitHub Secrets and environment variables.
+5. Push to main branch to trigger deployment via GitHub Actions.

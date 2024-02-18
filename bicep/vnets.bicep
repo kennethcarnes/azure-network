@@ -4,8 +4,7 @@ param hubSubnet1Prefix string = '10.0.1.0/24'
 param hubSubnet2Prefix string = '10.0.2.0/24'
 param spokeVnetDetails array
 param AzureFirewallSubnet string = '10.0.0.0/24'
-// Updated to avoid overlap with AzureFirewallSubnet
-param AzureFirewallManagementSubnet string = '10.0.3.0/24' 
+param AzureFirewallManagementSubnet string = '10.0.3.0/24'
 
 resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: hubVnetName

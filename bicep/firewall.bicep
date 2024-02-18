@@ -159,3 +159,6 @@ resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectio
     ]
   }
 }
+
+output firewallPublicIPAddress string = firewallPublicIP.properties.ipAddress
+output firewallMgmtPublicIPAddress string = firewallMgmtPublicIP.properties.ipAddress

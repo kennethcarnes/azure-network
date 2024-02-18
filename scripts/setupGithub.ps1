@@ -13,13 +13,13 @@ $repositoryName = Read-Host "Enter the GitHub repository name"
 # Environment variable keys
 $envVarKeys = @(
     "RESOURCE_GROUP_NAME",
-    "LOCATION"
+    "LOCATION",
+    "ADMIN_PUBLIC_KEY"
 )
 # Prompt for each environment variable
 foreach ($key in $envVarKeys) {
     $value = Read-Host "Enter the value for $key"
     gh secret set $key --body $value --repo "$repositoryOwner/$repositoryName"
 }
-
 
 Write-Host "GitHub repository secrets and environment variables have been set."
