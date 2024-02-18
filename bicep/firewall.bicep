@@ -140,11 +140,11 @@ resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectio
             name: 'Allow-DNS'
             ruleType: 'NetworkRule'
             sourceAddresses: [
-              '10.0.2.0/24'
+              '*'
             ]
             destinationAddresses: [
-              '209.244.0.3'
-              '209.244.0.4'
+              '8.8.8.8'
+              '8.8.4.4'
             ]
             ipProtocols: [
               'TCP'
