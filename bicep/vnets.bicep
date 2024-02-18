@@ -1,10 +1,11 @@
 param location string
-param hubVnetName string
+param hubVnetName string = 'hubVnet'
 param hubSubnet1Prefix string = '10.0.1.0/24'
 param hubSubnet2Prefix string = '10.0.2.0/24'
 param spokeVnetDetails array
 param AzureFirewallSubnet string = '10.0.0.0/24'
 param AzureFirewallManagementSubnet string = '10.0.3.0/24'
+param AzureBastionSubnetPrefix string = '10.0.4.0/27' // Ensure this prefix doesn't overlap with other subnet ranges
 
 resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: hubVnetName
@@ -36,6 +37,13 @@ resource hubVnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
         name: 'Subnet2'
         properties: {
           addressPrefix: hubSubnet2Prefix
+        }
+      }
+      // Define the AzureBastionSubnet required for the Bastion Host
+      {
+        name: 'AzureBastionSubnet'
+        properties: {
+          addressPrefix: AzureBastionSubnetPrefix
         }
       }
     ]
