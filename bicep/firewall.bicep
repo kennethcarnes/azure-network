@@ -82,6 +82,9 @@ resource firewallPolicy 'Microsoft.Network/firewallPolicies@2023-06-01' = {
   properties: {
     threatIntelMode: 'Alert'
   }
+  dependsOn: [
+    azureFirewall // Ensure firewall is deployed before policy
+  ]
 }
 
 resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-06-01' = {
@@ -121,6 +124,9 @@ resource applicationRuleCollection 'Microsoft.Network/firewallPolicies/ruleColle
       }
     ]
   }
+  dependsOn: [
+    firewallPolicy // Added to ensure policy is in place before rule collections are applied
+  ]
 }
 
 resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectionGroups@2023-06-01' = {
@@ -158,6 +164,9 @@ resource networkRuleCollection 'Microsoft.Network/firewallPolicies/ruleCollectio
       }
     ]
   }
+  dependsOn: [
+    firewallPolicy // Ensures policy is ready before applying network rules
+  ]
 }
 
 output firewallPublicIPAddress string = firewallPublicIP.properties.ipAddress
