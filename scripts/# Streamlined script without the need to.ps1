@@ -1,22 +1,54 @@
-# Streamlined verification script without defining multiple variables
+# Ensure Azure context is set
+Connect-AzAccount
 
-# List all resources in the resource group 'devResourceGroup'
-az resource list --resource-group devResourceGroup --output table
+$resourceGroup = "devResourceGroup"
 
-# Verify Virtual Networks and Subnets
-az network vnet list --resource-group devResourceGroup --output table
+# Fetch resources
+$vmList = Get-AzVm -ResourceGroupName $resourceGroup
+$nicList = Get-AzNetworkInterface -ResourceGroupName $resourceGroup
+$publicIpList = Get-AzPublicIpAddress -ResourceGroupName $resourceGroup
+$vnetList = Get-AzVirtualNetwork -ResourceGroupName $resourceGroup
+$bastion = Get-AzBastion -ResourceGroupName $resourceGroup | Where-Object { $_.Name -eq "hubVnet-bastion" }
 
-# Check Virtual Machines
-az vm list --resource-group devResourceGroup --show-details --output table
+# Function to test connectivity using Bastion
+Function Test-SSHConnectivity {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$vmName,
+        [string]$resourceGroupName = $resourceGroup
+    )
+    $vm = Get-AzVm -Name $vmName -ResourceGroupName $resourceGroupName
+    if ($vm -eq $null) {
+        Write-Host "VM $vmName not found."
+        return
+    }
+    $bastionHost = $bastion.DnsName
+    Write-Host "Testing SSH Connectivity to $vmName through Bastion Host $bastionHost..."
+    # Note: Actual SSH command execution would require interactive session or SSH key configuration
+}
 
-# Verify Network Interface Cards
-az network nic list --resource-group devResourceGroup --output table
+# Validate VMs and Test SSH Connectivity
+foreach ($vm in $vmList) {
+    Write-Host "Validating VM: $($vm.Name)"
+    Test-SSHConnectivity -vmName $vm.Name
+}
 
-# Check Public IP Addresses
-az network public-ip list --resource-group devResourceGroup --output table
+# Network and Application Testing
+# Assuming VMs are Linux based for using SSH and ping
+# Note: For Windows VMs, consider using WinRM or other remote management tools
 
-# Inspect Azure Firewall Configuration
-az network firewall show --name hubVnet-firewall --resource-group devResourceGroup --output json
+# Test Network Connectivity (Ping) and Application Access
+# This part would ideally be executed within the SSH session initiated above, which requires manual interaction or a custom automation setup
+# For automated tests, consider deploying a custom script on the VM that performs these tests and reports back
 
-# Inspect Bastion Host
-az network bastion show --name hubVnet-bastion --resource-group devResourceGroup --output json
+# Display Public IP Addresses for manual external access testing
+Write-Host "`nPublic IP Addresses:"
+$publicIpList | ForEach-Object {
+    Write-Host "$($_.Name): $($_.IpAddress)"
+}
+
+# Instructions for Manual Testing
+Write-Host "`nPlease manually test SSH connectivity through Azure Bastion using the public DNS name of the bastion host."
+Write-Host "For internal connectivity tests (ping, curl) between VMs, execute these commands within each VM's SSH session."
+
+# Note: The limitations of PowerShell scripting for interactive SSH sessions and the security context of Azure mean some steps, particularly those involving SSH into VMs, require manual actions or the use of third-party tools like sshpass for automation, which is not recommended for secure environments.
