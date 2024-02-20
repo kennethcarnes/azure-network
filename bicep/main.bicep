@@ -1,8 +1,7 @@
 param location string = 'eastus'
-param adminPublicKey string
-param hubVnetName string = 'hubVnet'
-param hubSubnet1Prefix string = '10.0.1.0/24'
-param hubSubnet2Prefix string = '10.0.2.0/24'
+param adminUsername string
+@secure()
+param adminPassword string
 param spokeVnetDetails array = [
   {
     name: 'spokeVnet1'
@@ -24,41 +23,31 @@ param spokeVnetDetails array = [
   }
 ]
 
-var firewallPrivateIp = '10.0.0.4'
-
-module vnets './vnets.bicep' = {
-  name: 'vnetDeployment'
+module network './network.bicep' = {
+  name: 'networkDeployment'
   params: {
     location: location
-    hubVnetName: hubVnetName
-    hubSubnet1Prefix: hubSubnet1Prefix
-    hubSubnet2Prefix: hubSubnet2Prefix
+    hubVnetName: 'hubVnet'
+    hubSubnet1Prefix: '10.0.1.0/24'
+    hubSubnet2Prefix: '10.0.2.0/24'
+    AzureFirewallSubnet: '10.0.0.0/24'
+    AzureFirewallManagementSubnet: '10.0.3.0/24'
+    AzureBastionSubnetPrefix: '10.0.4.0/27'
     spokeVnetDetails: spokeVnetDetails
   }
-}
-
-module firewall './firewall.bicep' = {
-  name: 'firewallDeployment'
-  params: {
-    location: location
-    hubVnetName: hubVnetName
-    firewallPrivateIp: firewallPrivateIp
-  }
-  dependsOn: [
-    vnets
-  ]
 }
 
 module compute './compute.bicep' = {
   name: 'computeDeployment'
   params: {
     location: location
-    adminUsername: 'adminUser'
-    adminPublicKey: adminPublicKey
+    vmSize: 'Standard_B1s'
+    adminUsername: adminUsername
+    adminPassword: adminPassword
     spokeVnetDetails: spokeVnetDetails
   }
   dependsOn: [
-    vnets
+    network // Ensure compute resources depend on network resources
   ]
 }
 
@@ -66,11 +55,9 @@ module management './management.bicep' = {
   name: 'managementDeployment'
   params: {
     location: location
-    hubVnetName: hubVnetName
+    hubVnetName: 'hubVnet'
   }
   dependsOn: [
-    vnets
+    network
   ]
 }
-
-output hubVnetId string = vnets.outputs.hubVnetId

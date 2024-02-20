@@ -1,8 +1,9 @@
 param location string
 param vmSize string = 'Standard_B1s'
-param adminUsername string
-param adminPublicKey string
 param spokeVnetDetails array
+param adminUsername string
+@secure()
+param adminPassword string
 
 resource networkInterfaces 'Microsoft.Network/networkInterfaces@2021-03-01' = [for (vnet, i) in spokeVnetDetails: {
   name: '${vnet.name}-vm-nic'
@@ -32,17 +33,7 @@ resource spokeVMs 'Microsoft.Compute/virtualMachines@2021-07-01' = [for (vnet, i
     osProfile: {
       computerName: '${vnet.name}-vm'
       adminUsername: adminUsername
-      linuxConfiguration: {
-        disablePasswordAuthentication: true
-        ssh: {
-          publicKeys: [
-            {
-              path: '/home/${adminUsername}/.ssh/authorized_keys'
-              keyData: adminPublicKey
-            }
-          ]
-        }
-      }
+      adminPassword: adminPassword
     }
     storageProfile: {
       imageReference: {

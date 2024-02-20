@@ -14,7 +14,7 @@ $repositoryName = Read-Host "Enter the GitHub repository name"
 $envVarKeys = @(
     "RESOURCE_GROUP_NAME",
     "LOCATION",
-    "ADMIN_PUBLIC_KEY"
+    "ADMIN_PASSWORD"
 )
 # Prompt for each environment variable
 foreach ($key in $envVarKeys) {

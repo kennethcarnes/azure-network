@@ -16,14 +16,12 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set up environment variable for SSH Public Key
-        run: echo "ADMIN_PUBLIC_KEY=${{ secrets.ADMIN_PUBLIC_KEY }}" >> $GITHUB_ENV
-
+        
       - name: Deploy Azure Resources
         run: |
           az deployment group create \
             --name deployment-${{ github.run_id }} \
             --resource-group "${{ secrets.RESOURCE_GROUP_NAME }}" \
             --template-file ./bicep/main.bicep \
-            --parameters adminPublicKey="${{ secrets.ADMIN_PUBLIC_KEY }}"
+            --parameters adminPassword="${{ secrets.ADMIN_PASSWORD }}"
+      
