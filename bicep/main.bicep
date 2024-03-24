@@ -51,7 +51,7 @@ module compute './compute.bicep' = {
   ]
 }
 
-module management './management.bicep' = {
+module management './bastion.bicep' = {
   name: 'managementDeployment'
   params: {
     location: location
