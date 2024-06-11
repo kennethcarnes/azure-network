@@ -1,4 +1,5 @@
 ## Overview
+[![Azure Deployment](https://github.com/kennethcarnes/azure-network/actions/workflows/deploy.yml/badge.svg)](https://github.com/kennethcarnes/azure-network/actions/workflows/deploy.yml)
 This project automates the deployment of scalable network infrastructure using Azure Bicep and GitHub Actions, featuring a hub and spoke network topology with Azure Firewall for enhanced security.
 
 ## Structure
